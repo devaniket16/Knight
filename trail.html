@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Knight's Tour Problem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(8, 50px);
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+        }
+        .knight {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Knight's Tour Problem Solver</h1>
+    <label for="board-size">Choose Chessboard Size:</label>
+    <input type="number" id="board-size" min="5" max="10" value="8">
+    <button onclick="startKnightTour()">Start</button>
+    <div id="solution">
+        <h2>Solution:</h2>
+        <div id="chessboard"></div>
+    </div>
+
+    <script>
+        function startKnightTour() {
+            const boardSize = parseInt(document.getElementById("board-size").value);
+            const chessboard = document.getElementById("chessboard");
+            chessboard.innerHTML = "";
+
+            const solution = solveKnightTour(boardSize);
+
+            if (solution) {
+                displaySolution(solution, chessboard);
+            } else {
+                chessboard.innerHTML = "<p>No solution found</p>";
+            }
+        }
+
+        function solveKnightTour(boardSize) {
+            // Initialize the chessboard
+            const chessboard = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
+            // Define possible knight moves
+            const moves = [
+                [-2, -1], [-1, -2], [1, -2], [2, -1],
+                [2, 1], [1, 2], [-1, 2], [-2, 1]
+            ];
+
+            function isSafe(x, y) {
+                return x >= 0 && y >= 0 && x < boardSize && y < boardSize && chessboard[y][x] === 0;
+            }
+
+            function solve(x, y, moveNumber) {
+                if (moveNumber === boardSize * boardSize) {
+                    return true;  // All squares visited
+                }
+
+                for (let i = 0; i < 8; i++) {
+                    const newX = x + moves[i][0];
+                    const newY = y + moves[i][1];
+
+                    if (isSafe(newX, newY)) {
+                        chessboard[newY][newX] = moveNumber + 1;
+                        if (solve(newX, newY, moveNumber + 1)) {
+                            return true;
+                        } else {
+                            chessboard[newY][newX] = 0;  // Backtrack
+                        }
+                    }
+                }
+
+                return false;  // No valid moves from this position
+            }
+
+            // Start the tour from the top-left corner
+            chessboard[0][0] = 1;
+            if (solve(0, 0, 1)) {
+                return chessboard;
+            }
+
+            return null;  // No solution found
+        }
+
+        function displaySolution(solution, chessboard) {
+            for (let y = 0; y < solution.length; y++) {
+                for (let x = 0; x < solution[y].length; x++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    if (solution[y][x] === 1) {
+                        cell.innerHTML = "<span class='knight'>♞</span>";
+                    } else {
+                        cell.textContent = solution[y][x];
+                    }
+                    chessboard.appendChild(cell);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
