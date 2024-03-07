@@ -11,6 +11,7 @@ const int moveY[] = {1, 2, 2, 1, -1, -2, -2, -1};
 
 // Function to print the chessboard
 void printBoard(int board[N][N]) {
+    
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             cout << board[i][j] << "\t";
