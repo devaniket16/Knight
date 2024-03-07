@@ -3,7 +3,7 @@
 using namespace std;
 
 // Size of the chessboard
-const int N = 8;
+const int N = 4;
 
 // Possible moves for the knight
 const int moveX[] = {2, 1, -1, -2, -2, -1, 1, 2};
